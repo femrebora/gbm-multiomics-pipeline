@@ -379,7 +379,11 @@ def _save_km_plot(
         ax.set_ylim(0, 1.05)
 
         if at_risk:
-            add_at_risk_counts(*fitters.values(), ax=ax)
+            try:
+                add_at_risk_counts(*fitters.values(), ax=ax)
+            except Exception:
+                # Some lifelines versions have API changes — skip at-risk table
+                pass
 
         plt.tight_layout()
         fig.savefig(out_path, dpi=150)
