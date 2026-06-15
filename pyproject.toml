@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gbm-multiomics"
-version = "0.1.0"
-description = "Download and analyse TCGA-GBM multiomics data (RNA-seq, methylation, mutations, CNV, miRNA)"
+version = "0.2.0"
+description = "TCGA-GBM multiomics prognostic biomarker discovery pipeline — download, integrate, and identify essential genes in glioblastoma"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -14,7 +14,8 @@ dependencies = [
     "pandas>=2.0",
     "numpy>=1.26",
     "tqdm>=4.66",
-    "openpyxl>=3.1",     # for CDR .xlsx reading
+    "openpyxl>=3.1",       # CDR .xlsx reading
+    "pyyaml>=6.0",         # YAML config files
 ]
 
 [project.optional-dependencies]
@@ -28,12 +29,28 @@ analysis = [
     "gseapy>=1.1",
     "scikit-learn>=1.3",
     "adjustText>=1.1",
+    "scikit-survival>=0.22",  # Lasso-Cox, time-dependent ROC
+    "plotly>=5.18",           # interactive figures (supplementary)
+    "networkx>=3.2",          # PPI network analysis
+    "python-igraph>=0.11",    # network clustering (Leiden/Louvain)
 ]
-all = ["gbm-multiomics[analysis]"]
+r_bridge = [
+    "rpy2>=3.5",             # R interoperability for DESeq2, glmnet, survminer
+]
+container = [
+    "gbm-multiomics[analysis]",
+    "gbm-multiomics[r_bridge]",
+    "jupyter>=1.0",
+    "notebook>=7.0",
+]
+all = ["gbm-multiomics[analysis]", "gbm-multiomics[r_bridge]"]
 
 [project.scripts]
-gbm-download = "gbm_multiomics.cli:main"
-gbm-analyse  = "gbm_multiomics.cli:main_analyse"
+gbm-download  = "gbm_multiomics.cli:main"
+gbm-analyse   = "gbm_multiomics.cli:main_analyse"
+gbm-pipeline  = "gbm_multiomics.cli:main_pipeline"
+gbm-preprocess = "gbm_multiomics.cli:main_preprocess"
+gbm-report    = "gbm_multiomics.cli:main_report"
 
 [tool.setuptools.packages.find]
 where = ["."]

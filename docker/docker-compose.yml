@@ -1,0 +1,54 @@
+# GBM Multi-Omics Pipeline — Docker Compose
+#
+# Usage:
+#   docker compose -f docker/docker-compose.yml build
+#   docker compose -f docker/docker-compose.yml run pipeline download --data-type all
+#   docker compose -f docker/docker-compose.yml run pipeline preprocess
+#   docker compose -f docker/docker-compose.yml run pipeline analyze --module prognostic
+#   docker compose -f docker/docker-compose.yml run pipeline report
+#
+# Or run the full pipeline:
+#   docker compose -f docker/docker-compose.yml run pipeline run --config /config/pipeline_config.yaml
+
+version: "3.8"
+
+services:
+  pipeline:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: gbm-pipeline:latest
+    container_name: gbm_prognostic_pipeline
+    volumes:
+      # Mount data and results directories
+      - ../data:/data:rw
+      - ../results:/results:rw
+      - ../config:/config:ro
+      # Mount notebooks for interactive exploration
+      - ../notebooks:/notebooks:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MPLBACKEND=Agg
+      - GBM_DATA_DIR=/data
+      - GBM_RESULTS_DIR=/results
+      - GBM_CONFIG=/config/pipeline_config.yaml
+    # No ports needed unless using Jupyter
+    working_dir: /app
+
+  jupyter:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: gbm-pipeline:latest
+    container_name: gbm_jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../data:/data:rw
+      - ../results:/results:rw
+      - ../config:/config:ro
+      - ../notebooks:/notebooks:rw
+    working_dir: /notebooks
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='gbm'
+    environment:
+      - PYTHONUNBUFFERED=1
