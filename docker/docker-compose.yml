@@ -49,6 +49,6 @@ services:
       - ../config:/config:ro
       - ../notebooks:/notebooks:rw
     working_dir: /notebooks
-    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='gbm'
+    command: jupyter notebook --ip=127.0.0.1 --port=8888 --no-browser --allow-root --NotebookApp.token="${JUPYTER_TOKEN:-}"
     environment:
       - PYTHONUNBUFFERED=1
