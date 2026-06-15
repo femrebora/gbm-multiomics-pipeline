@@ -155,16 +155,15 @@ class GeneFocus:
             clinical_idx = self.clinical.set_index(self._sample_col)
             if "is_tumor" in clinical_idx.columns:
                 tumor_mask = clinical_idx.loc[common_samples, "is_tumor"].astype(bool)
-                tumor_vals = expr_vals[expr_vals.index.isin(
-                    common_samples[np.where(tumor_mask)[0]]
-                    if isinstance(tumor_mask, pd.Series)
-                    else [s for s, t in zip(common_samples, tumor_mask) if t]
-                )]
-                normal_vals = expr_vals[expr_vals.index.isin(
-                    common_samples[~np.array(tumor_mask)]
-                    if hasattr(tumor_mask, '__array__')
-                    else [s for s, t in zip(common_samples, tumor_mask) if not t]
-                )]
+                # Get boolean array regardless of pandas/numpy
+                if hasattr(tumor_mask, "values"):
+                    is_tumor = tumor_mask.values
+                else:
+                    is_tumor = np.array(tumor_mask)
+                tumor_samples = [s for s, t in zip(common_samples, is_tumor) if t]
+                normal_samples = [s for s, t in zip(common_samples, is_tumor) if not t]
+                tumor_vals = expr_vals[tumor_samples] if tumor_samples else pd.Series(dtype=float)
+                normal_vals = expr_vals[normal_samples] if normal_samples else pd.Series(dtype=float)
                 tumor_mean = float(tumor_vals.mean()) if len(tumor_vals) > 0 else np.nan
                 normal_mean = float(normal_vals.mean()) if len(normal_vals) > 0 else np.nan
                 result["expression"]["tumor_mean"] = round(tumor_mean, 3)
