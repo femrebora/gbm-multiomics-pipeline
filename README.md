@@ -52,11 +52,11 @@ pip install -e .
 pip install -e ".[analysis]"
 ```
 
-### Companion tools
+### Data Available 
 
 | Tool | Purpose |
 |------|---------|
-| [tcga-gdc-downloader](https://github.com/onedimkurt/tcga-gdc-downloader) | Download TCGA RNA-seq data for any of 33 cancer types with CDR survival annotations — used as the foundation for this pipeline |
+| [tcga-gdc-downloader](https://github.com/onedimkurt/tcga-gdc-downloader) | Download TCGA RNA-seq data for any of 33 cancer types with CDR survival annotations, used as the foundation for this pipeline |
 
 Install separately if you need pan-cancer TCGA downloads outside of GBM:
 
