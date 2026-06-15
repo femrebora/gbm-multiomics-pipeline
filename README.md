@@ -28,7 +28,7 @@ gbm-pipeline analyze --module prognostic
 # 5. Look up a gene of interest
 gbm-pipeline gene-lookup --gene PTGS1
 
-# 6. Generate thesis-ready figures
+# 6. Generate figures
 gbm-pipeline gene-spotlight --genes EGFR,PTEN,TP53,IDH1
 
 # 7. Full pipeline (download → figures → report)
