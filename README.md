@@ -2,7 +2,6 @@
 
 ![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-50%20passed-green)
 
 **Prognostic biomarker discovery pipeline for Glioblastoma (GBM) using TCGA multi-omics data.** Downloads RNA-seq, methylation, mutations, CNV, and miRNA data from the NCI GDC, then identifies genes essential for GBM survival with publication-ready figures.
 
